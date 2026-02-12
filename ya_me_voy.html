@@ -1,0 +1,1287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Ya Me Voy">
+<meta name="theme-color" content="#0a0e27">
+<title>Ya Me Voy — English to Spanish Phrasebook</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap');
+
+:root {
+  --bg: #0a0e27;
+  --bg2: #111633;
+  --card: #1a1f3a;
+  --border: #2d3558;
+  --cyan: #00f0ff;
+  --cyan-glow: rgba(0,240,255,0.3);
+  --pink: #ff0080;
+  --pink-glow: rgba(255,0,128,0.3);
+  --lime: #d0ff00;
+  --lime-glow: rgba(208,255,0,0.25);
+  --purple: #a855f7;
+  --white: #f0f4ff;
+  --gray: #7b8ab8;
+  --gray-dark: #4a5578;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+body {
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Grid pattern background */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,240,255,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,240,255,0.03) 1px, transparent 1px);
+  background-size: 50px 50px;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Grain texture */
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' /%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+  z-index: 0;
+  pointer-events: none;
+  opacity: 0.5;
+}
+
+/* ===== SCREEN SYSTEM ===== */
+#app { position: relative; min-height: 100vh; z-index: 1; }
+
+.screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  min-height: 100vh;
+  background: var(--bg);
+  z-index: 1;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s;
+}
+.screen.visible {
+  opacity: 1;
+  pointer-events: all;
+  position: relative;
+}
+
+/* ===== HEADER ===== */
+.hdr {
+  text-align: center;
+  padding: 60px 20px 40px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hdr::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(ellipse, var(--cyan-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hdr::after {
+  content: '';
+  position: absolute;
+  top: -50px;
+  left: 10%;
+  width: 250px;
+  height: 250px;
+  background: radial-gradient(ellipse, var(--pink-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.hdr-tag {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--cyan), var(--purple));
+  color: var(--bg);
+  font-size: 10px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: 20px;
+  margin-bottom: 18px;
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+
+.hdr h1 {
+  font-size: clamp(48px, 14vw, 78px);
+  font-weight: 900;
+  line-height: 0.9;
+  letter-spacing: -2px;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--cyan) 0%, var(--pink) 50%, var(--lime) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-transform: uppercase;
+}
+
+.hdr p {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+/* ===== INSTALL BANNER ===== */
+#banner {
+  margin: 0 16px 16px;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-left: 4px solid var(--cyan);
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+#banner .ico {
+  font-size: 26px;
+  flex-shrink: 0;
+}
+#banner .txt {
+  flex: 1;
+}
+#banner .ttl {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--cyan);
+  margin-bottom: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+#banner .dsc {
+  font-size: 11px;
+  color: var(--gray);
+  line-height: 1.5;
+}
+#banner button {
+  background: none;
+  border: none;
+  color: var(--gray-dark);
+  font-size: 22px;
+  font-weight: 700;
+  cursor: pointer;
+  flex-shrink: 0;
+  padding: 4px;
+}
+
+/* ===== INTRO ===== */
+.intro {
+  padding: 24px 20px 16px;
+  text-align: center;
+}
+.intro h2 {
+  font-size: 20px;
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--cyan), var(--lime));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 10px;
+  letter-spacing: 0.5px;
+}
+.intro p {
+  font-size: 13px;
+  color: var(--gray);
+  line-height: 1.6;
+  max-width: 500px;
+  margin: 0 auto 24px;
+}
+
+/* ===== STATS ===== */
+.stats {
+  padding: 0 16px 20px;
+}
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px;
+  max-width: 450px;
+  margin: 0 auto;
+}
+.stat {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 8px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.stat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.stat:nth-child(1)::before {
+  background: linear-gradient(90deg, var(--cyan), var(--purple));
+}
+.stat:nth-child(2)::before {
+  background: linear-gradient(90deg, var(--pink), var(--cyan));
+}
+.stat:nth-child(3)::before {
+  background: linear-gradient(90deg, var(--lime), var(--pink));
+}
+.stat .val {
+  font-size: 32px;
+  font-weight: 900;
+  color: var(--white);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+.stat .lbl {
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ===== QUICK TEST ===== */
+.quick {
+  padding: 0 16px 20px;
+}
+.quick h3 {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 12px;
+  color: var(--gray);
+}
+
+.qcard {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  text-align: left;
+  width: 100%;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.qcard::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--cyan), var(--pink));
+  opacity: 0.5;
+}
+.qcard:active {
+  transform: scale(0.98);
+  border-color: var(--cyan);
+}
+.qcard.playing {
+  background: linear-gradient(135deg, rgba(0,240,255,0.1), rgba(255,0,128,0.1));
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px var(--cyan-glow);
+}
+.qcard.playing::before {
+  opacity: 1;
+}
+.qcard .en {
+  font-size: 12px;
+  color: var(--gray);
+  margin-bottom: 5px;
+  font-weight: 500;
+}
+.qcard .es {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--white);
+}
+.qcard .hint {
+  font-size: 10px;
+  color: var(--gray-dark);
+  margin-top: 6px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.qcard.playing .hint {
+  color: var(--cyan);
+}
+
+/* ===== CATEGORIES ===== */
+.cats {
+  padding: 20px 16px 30px;
+}
+.cats h3 {
+  font-size: 11px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin-bottom: 14px;
+  color: var(--gray);
+}
+
+.cat-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.cat {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 20px 12px 16px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  text-align: center;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.cat::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+}
+.cat:active {
+  transform: scale(0.97);
+}
+.cat .ico {
+  font-size: 32px;
+  display: block;
+  margin-bottom: 10px;
+  line-height: 1;
+}
+.cat .name {
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  color: var(--white);
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+.cat .count {
+  font-size: 10px;
+  color: var(--gray);
+  font-weight: 600;
+}
+
+/* Neon accents for categories */
+.cat:nth-child(1)::before { background: linear-gradient(90deg, var(--cyan), var(--purple)); }
+.cat:nth-child(2)::before { background: linear-gradient(90deg, var(--pink), var(--cyan)); }
+.cat:nth-child(3)::before { background: linear-gradient(90deg, var(--lime), var(--pink)); }
+.cat:nth-child(4)::before { background: linear-gradient(90deg, var(--purple), var(--lime)); }
+.cat:nth-child(5)::before { background: linear-gradient(90deg, var(--cyan), var(--pink)); }
+.cat:nth-child(6)::before { background: linear-gradient(90deg, var(--lime), var(--purple)); }
+.cat:nth-child(7)::before { background: linear-gradient(90deg, var(--pink), var(--lime)); }
+.cat:nth-child(8)::before { background: linear-gradient(90deg, var(--cyan), var(--lime)); }
+.cat:nth-child(9)::before { background: linear-gradient(90deg, var(--purple), var(--pink)); }
+.cat:nth-child(10)::before { background: linear-gradient(90deg, var(--lime), var(--cyan)); }
+.cat:nth-child(11)::before { background: linear-gradient(90deg, var(--pink), var(--purple)); }
+.cat:nth-child(12)::before { background: linear-gradient(90deg, var(--cyan), var(--pink)); }
+
+.cat:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(0,240,255,0.2);
+}
+
+.footer {
+  text-align: center;
+  padding: 10px 20px 40px;
+  font-size: 10px;
+  color: var(--gray-dark);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+/* ===== CATEGORY SCREEN ===== */
+.cat-hdr {
+  background: rgba(10,14,39,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border);
+  padding: 52px 16px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.back {
+  background: var(--card);
+  border: 2px solid var(--border);
+  color: var(--cyan);
+  font-size: 12px;
+  font-weight: 900;
+  padding: 10px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  transition: all 0.15s;
+}
+.back:active {
+  background: var(--border);
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+.cat-info {
+  flex: 1;
+}
+.cat-info .name {
+  font-size: clamp(16px, 4vw, 20px);
+  font-weight: 900;
+  background: linear-gradient(90deg, var(--cyan), var(--pink));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  line-height: 1.1;
+}
+.cat-info .count {
+  font-size: 11px;
+  color: var(--gray);
+  margin-top: 3px;
+  font-weight: 600;
+}
+
+/* ===== SEARCH BAR ===== */
+.search-wrap {
+  padding: 12px 16px;
+  background: rgba(10,14,39,0.95);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border-bottom: 2px solid var(--border);
+  position: sticky;
+  top: 84px;
+  z-index: 9;
+}
+
+.search {
+  width: 100%;
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 8px;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--white);
+  -webkit-appearance: none;
+  appearance: none;
+  font-family: inherit;
+  transition: all 0.2s;
+}
+.search::placeholder {
+  color: var(--gray-dark);
+}
+.search:focus {
+  outline: none;
+  border-color: var(--cyan);
+  box-shadow: 0 0 15px var(--cyan-glow);
+}
+
+.phrases {
+  padding: 16px 16px 50px;
+}
+
+.phr {
+  background: var(--card);
+  border: 2px solid var(--border);
+  border-radius: 12px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  -webkit-appearance: none;
+  appearance: none;
+  text-align: left;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  transition: all 0.15s;
+  position: relative;
+  overflow: hidden;
+}
+.phr::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(to bottom, var(--cyan), var(--pink));
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+.phr:active {
+  transform: scale(0.98);
+}
+.phr.playing {
+  background: linear-gradient(135deg, rgba(208,255,0,0.1), rgba(0,240,255,0.1));
+  border-color: var(--lime);
+  box-shadow: 0 0 20px var(--lime-glow);
+}
+.phr.playing::before {
+  opacity: 1;
+  background: linear-gradient(to bottom, var(--lime), var(--cyan));
+}
+
+.phr .num {
+  font-size: 20px;
+  font-weight: 900;
+  color: var(--border);
+  min-width: 28px;
+  text-align: center;
+}
+.phr.playing .num {
+  color: var(--lime);
+}
+
+.phr .txt {
+  flex: 1;
+}
+.phr .en {
+  font-size: 11px;
+  color: var(--gray);
+  margin-bottom: 4px;
+  font-weight: 500;
+  line-height: 1.4;
+}
+.phr .es {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.4;
+}
+.phr .hint {
+  font-size: 9px;
+  color: var(--gray-dark);
+  margin-top: 4px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+.phr.playing .hint {
+  color: var(--lime);
+}
+
+.phr .arr {
+  font-size: 18px;
+  color: var(--gray-dark);
+  font-weight: 900;
+}
+.phr.playing .arr {
+  color: var(--lime);
+}
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 3px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--cyan);
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- ===== HOME SCREEN ===== -->
+  <div id="home" class="screen visible">
+
+    <div class="hdr">
+      <div class="hdr-tag">SPANISH SURVIVAL KIT</div>
+      <h1>YA ME VOY</h1>
+      <p>240 phrases • English → Spanish</p>
+    </div>
+
+    <div id="banner">
+      <span class="ico">📱</span>
+      <div class="txt">
+        <div class="ttl">Install on iPhone</div>
+        <div class="dsc">Safari → <strong>Share ↑</strong> → <strong>"Add to Home Screen"</strong> → Works offline!</div>
+      </div>
+      <button id="closeBanner">×</button>
+    </div>
+
+    <div class="intro">
+      <h2>Everything You Need to Survive</h2>
+      <p>Tap any phrase to hear perfect Spanish pronunciation. 12 categories covering daily life, work, emergencies, and more.</p>
+    </div>
+
+    <div class="stats">
+      <div class="stats-grid">
+        <div class="stat">
+          <div class="val">240</div>
+          <div class="lbl">Phrases</div>
+        </div>
+        <div class="stat">
+          <div class="val">12</div>
+          <div class="lbl">Categories</div>
+        </div>
+        <div class="stat">
+          <div class="val">0</div>
+          <div class="lbl">Ads</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="quick">
+      <h3>Quick Test — Tap to Hear</h3>
+      <button class="qcard" id="q0">
+        <div class="en">Hello, how are you?</div>
+        <div class="es">¡Hola! ¿Qué tal?</div>
+        <div class="hint" id="qh0">▶ Tap to hear Spanish</div>
+      </button>
+      <button class="qcard" id="q1">
+        <div class="en">Where is the bathroom?</div>
+        <div class="es">¿Dónde está el baño?</div>
+        <div class="hint" id="qh1">▶ Tap to hear Spanish</div>
+      </button>
+      <button class="qcard" id="q2">
+        <div class="en">How much does this cost?</div>
+        <div class="es">¿Cuánto cuesta esto?</div>
+        <div class="hint" id="qh2">▶ Tap to hear Spanish</div>
+      </button>
+    </div>
+
+    <div class="cats">
+      <h3>Choose a Category</h3>
+      <div class="cat-grid">
+        <button class="cat" data-cat="0">
+          <span class="ico">👋</span>
+          <div class="name">Daily Basics</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="1">
+          <span class="ico">🍽️</span>
+          <div class="name">Food & Dining</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="2">
+          <span class="ico">🛍️</span>
+          <div class="name">Shopping</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="3">
+          <span class="ico">🚇</span>
+          <div class="name">Transport</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="4">
+          <span class="ico">🏠</span>
+          <div class="name">Housing</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="5">
+          <span class="ico">💼</span>
+          <div class="name">Work & Office</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="6">
+          <span class="ico">🎓</span>
+          <div class="name">School & Study</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="7">
+          <span class="ico">🚨</span>
+          <div class="name">Emergency</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="8">
+          <span class="ico">🏦</span>
+          <div class="name">Banking</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="9">
+          <span class="ico">📱</span>
+          <div class="name">Phone & Web</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="10">
+          <span class="ico">🎉</span>
+          <div class="name">Social Life</div>
+          <div class="count">20 phrases</div>
+        </button>
+        <button class="cat" data-cat="11">
+          <span class="ico">🔢</span>
+          <div class="name">Numbers & Time</div>
+          <div class="count">20 phrases</div>
+        </button>
+      </div>
+    </div>
+
+    <div class="footer">
+      YA ME VOY — FREE & OFFLINE — NO ADS
+    </div>
+  </div>
+
+  <!-- ===== CATEGORY SCREEN ===== -->
+  <div id="cat" class="screen">
+    <div class="cat-hdr">
+      <button class="back" id="back">← BACK</button>
+      <div class="cat-info">
+        <div class="name" id="catName"></div>
+        <div class="count" id="catCount"></div>
+      </div>
+    </div>
+    <div class="search-wrap">
+      <input type="text" class="search" id="search" placeholder="Search phrases...">
+    </div>
+    <div class="phrases" id="phraseList"></div>
+  </div>
+
+</div>
+
+<script>
+/* ============================================================
+   DATA — 240 PHRASES
+   ============================================================ */
+var DATA = [
+  {
+    name: 'Daily Basics',
+    icon: '👋',
+    phrases: [
+      { en: 'Hello, how are you?', es: '¡Hola! ¿Qué tal?' },
+      { en: 'Good morning / Good evening', es: 'Buenos días / Buenas noches' },
+      { en: 'Thank you very much', es: 'Muchas gracias' },
+      { en: 'You\'re welcome', es: 'De nada' },
+      { en: 'Please', es: 'Por favor' },
+      { en: 'Excuse me / Pardon me', es: 'Perdón / Disculpe' },
+      { en: 'I\'m sorry', es: 'Lo siento' },
+      { en: 'Nice to meet you', es: 'Mucho gusto' },
+      { en: 'I don\'t understand', es: 'No entiendo' },
+      { en: 'Can you speak more slowly?', es: '¿Puede hablar más despacio?' },
+      { en: 'Do you speak English?', es: '¿Habla inglés?' },
+      { en: 'Yes / No', es: 'Sí / No' },
+      { en: 'Maybe / I don\'t know', es: 'Quizás / No sé' },
+      { en: 'What is your name?', es: '¿Cómo te llamas?' },
+      { en: 'My name is...', es: 'Me llamo...' },
+      { en: 'Where are you from?', es: '¿De dónde eres?' },
+      { en: 'I\'m from...', es: 'Soy de...' },
+      { en: 'Have a good day!', es: '¡Que tengas un buen día!' },
+      { en: 'See you later / Goodbye', es: 'Hasta luego / Adiós' },
+      { en: 'Where is the bathroom?', es: '¿Dónde está el baño?' }
+    ]
+  },
+  {
+    name: 'Food & Dining',
+    icon: '🍽️',
+    phrases: [
+      { en: 'A table for two, please', es: 'Una mesa para dos, por favor' },
+      { en: 'The menu, please', es: 'La carta, por favor' },
+      { en: 'I\'m allergic to...', es: 'Soy alérgico/a a...' },
+      { en: 'What do you recommend?', es: '¿Qué recomienda?' },
+      { en: 'A beer / a glass of wine', es: 'Una cerveza / una copa de vino' },
+      { en: 'Water without gas / with gas', es: 'Agua sin gas / con gas' },
+      { en: 'Do you have vegetarian dishes?', es: '¿Tienen platos vegetarianos?' },
+      { en: 'Enjoy your meal!', es: '¡Buen provecho!' },
+      { en: 'It was very delicious, thank you', es: 'Estaba muy rico, gracias' },
+      { en: 'The check, please', es: 'La cuenta, por favor' },
+      { en: 'Is service included?', es: '¿Está incluido el servicio?' },
+      { en: 'Can I have a coffee?', es: '¿Puedo tomar un café?' },
+      { en: 'With milk / without milk', es: 'Con leche / sin leche' },
+      { en: 'What is this dish?', es: '¿Qué es este plato?' },
+      { en: 'I\'d like to order', es: 'Quisiera pedir' },
+      { en: 'Can I have the same?', es: '¿Puedo tomar lo mismo?' },
+      { en: 'Is this spicy?', es: '¿Esto es picante?' },
+      { en: 'A bottle of water, please', es: 'Una botella de agua, por favor' },
+      { en: 'Where is a good restaurant?', es: '¿Dónde hay un buen restaurante?' },
+      { en: 'Do you have WiFi?', es: '¿Tienen WiFi?' }
+    ]
+  },
+  {
+    name: 'Shopping & Money',
+    icon: '🛍️',
+    phrases: [
+      { en: 'How much does this cost?', es: '¿Cuánto cuesta esto?' },
+      { en: 'It\'s very expensive', es: 'Es muy caro' },
+      { en: 'Do you have a bigger/smaller size?', es: '¿Tienen una talla más grande/pequeña?' },
+      { en: 'I\'m just looking, thank you', es: 'Solo estoy mirando, gracias' },
+      { en: 'Can I pay by card?', es: '¿Puedo pagar con tarjeta?' },
+      { en: 'Where are the fitting rooms?', es: '¿Dónde están los probadores?' },
+      { en: 'I\'ll take it', es: 'Me lo llevo' },
+      { en: 'Do you have change?', es: '¿Tienen cambio?' },
+      { en: 'Can I have a receipt?', es: '¿Me da un recibo?' },
+      { en: 'What time do you close?', es: '¿A qué hora cierran?' },
+      { en: 'Do you accept credit cards?', es: '¿Aceptan tarjetas de crédito?' },
+      { en: 'Is there a discount?', es: '¿Hay descuento?' },
+      { en: 'Can I return this?', es: '¿Puedo devolver esto?' },
+      { en: 'Where is the supermarket?', es: '¿Dónde está el supermercado?' },
+      { en: 'I need a bag', es: 'Necesito una bolsa' },
+      { en: 'Do you have this in another color?', es: '¿Tienen esto en otro color?' },
+      { en: 'Can you show me...?', es: '¿Puede enseñarme...?' },
+      { en: 'Where can I find...?', es: '¿Dónde puedo encontrar...?' },
+      { en: 'Is this on sale?', es: '¿Esto está en oferta?' },
+      { en: 'I need to withdraw money', es: 'Necesito sacar dinero' }
+    ]
+  },
+  {
+    name: 'Transport & Directions',
+    icon: '🚇',
+    phrases: [
+      { en: 'Where is the station?', es: '¿Dónde está la estación?' },
+      { en: 'A ticket to..., please', es: 'Un billete para..., por favor' },
+      { en: 'What time does the next bus leave?', es: '¿A qué hora sale el próximo autobús?' },
+      { en: 'Is it far from here?', es: '¿Está lejos de aquí?' },
+      { en: 'Straight ahead, then right/left', es: 'Todo recto, luego a la derecha/izquierda' },
+      { en: 'Does this bus stop at...?', es: '¿Para este autobús en...?' },
+      { en: 'Where can I rent a car?', es: '¿Dónde puedo alquilar un coche?' },
+      { en: 'I\'m lost', es: 'Estoy perdido/a' },
+      { en: 'Can you show it on the map?', es: '¿Puede enseñármelo en el mapa?' },
+      { en: 'Stop here, please', es: 'Pare aquí, por favor' },
+      { en: 'How do I get to...?', es: '¿Cómo llego a...?' },
+      { en: 'How long does it take?', es: '¿Cuánto tiempo tarda?' },
+      { en: 'Can I walk there?', es: '¿Puedo ir andando?' },
+      { en: 'Where is the nearest metro?', es: '¿Dónde está el metro más cercano?' },
+      { en: 'I need a taxi', es: 'Necesito un taxi' },
+      { en: 'To the airport, please', es: 'Al aeropuerto, por favor' },
+      { en: 'What platform?', es: '¿Qué andén?' },
+      { en: 'Is this seat free?', es: '¿Está libre este asiento?' },
+      { en: 'Where is the bus stop?', es: '¿Dónde está la parada de autobús?' },
+      { en: 'I missed my train', es: 'Perdí mi tren' }
+    ]
+  },
+  {
+    name: 'Housing & Utilities',
+    icon: '🏠',
+    phrases: [
+      { en: 'I\'m looking for an apartment', es: 'Busco un piso' },
+      { en: 'How much is the rent?', es: '¿Cuánto es el alquiler?' },
+      { en: 'Are utilities included?', es: '¿Están incluidos los gastos?' },
+      { en: 'When can I move in?', es: '¿Cuándo puedo mudarme?' },
+      { en: 'Is there WiFi?', es: '¿Hay WiFi?' },
+      { en: 'The heating doesn\'t work', es: 'La calefacción no funciona' },
+      { en: 'There\'s no hot water', es: 'No hay agua caliente' },
+      { en: 'Can you fix this?', es: '¿Puede arreglar esto?' },
+      { en: 'I need a plumber', es: 'Necesito un fontanero' },
+      { en: 'The electricity is out', es: 'Se fue la luz' },
+      { en: 'Where do I put the trash?', es: '¿Dónde pongo la basura?' },
+      { en: 'Can I have an extra key?', es: '¿Puedo tener una llave extra?' },
+      { en: 'The door is stuck', es: 'La puerta está atascada' },
+      { en: 'My neighbors are very loud', es: 'Mis vecinos hacen mucho ruido' },
+      { en: 'Where is the landlord?', es: '¿Dónde está el propietario?' },
+      { en: 'I want to renew the contract', es: 'Quiero renovar el contrato' },
+      { en: 'Can I paint the walls?', es: '¿Puedo pintar las paredes?' },
+      { en: 'Is there a washing machine?', es: '¿Hay lavadora?' },
+      { en: 'The toilet is clogged', es: 'El inodoro está atascado' },
+      { en: 'I lost my keys', es: 'Perdí mis llaves' }
+    ]
+  },
+  {
+    name: 'Work & Office',
+    icon: '💼',
+    phrases: [
+      { en: 'I have a meeting at...', es: 'Tengo una reunión a las...' },
+      { en: 'What\'s the deadline?', es: '¿Cuál es la fecha límite?' },
+      { en: 'Can you send me that by email?', es: '¿Puede enviarme eso por email?' },
+      { en: 'I need to make a call', es: 'Necesito hacer una llamada' },
+      { en: 'Where is the conference room?', es: '¿Dónde está la sala de conferencias?' },
+      { en: 'Can we reschedule?', es: '¿Podemos reprogramar?' },
+      { en: 'I\'m working on it', es: 'Estoy trabajando en ello' },
+      { en: 'The project is delayed', es: 'El proyecto está retrasado' },
+      { en: 'I need more time', es: 'Necesito más tiempo' },
+      { en: 'Can you help me with this?', es: '¿Puede ayudarme con esto?' },
+      { en: 'I don\'t have access', es: 'No tengo acceso' },
+      { en: 'The printer is not working', es: 'La impresora no funciona' },
+      { en: 'Can I work from home?', es: '¿Puedo trabajar desde casa?' },
+      { en: 'I need a signature', es: 'Necesito una firma' },
+      { en: 'Where do I sign?', es: '¿Dónde firmo?' },
+      { en: 'I have a question', es: 'Tengo una pregunta' },
+      { en: 'Can we discuss this later?', es: '¿Podemos discutir esto más tarde?' },
+      { en: 'I\'m available all day', es: 'Estoy disponible todo el día' },
+      { en: 'Please confirm receipt', es: 'Por favor confirme recibo' },
+      { en: 'I need vacation days', es: 'Necesito días de vacaciones' }
+    ]
+  },
+  {
+    name: 'School & Study',
+    icon: '🎓',
+    phrases: [
+      { en: 'Where is the library?', es: '¿Dónde está la biblioteca?' },
+      { en: 'When is the exam?', es: '¿Cuándo es el examen?' },
+      { en: 'I don\'t understand this', es: 'No entiendo esto' },
+      { en: 'Can you explain again?', es: '¿Puede explicar otra vez?' },
+      { en: 'What is the homework?', es: '¿Cuál es la tarea?' },
+      { en: 'When is it due?', es: '¿Para cuándo es?' },
+      { en: 'Can I borrow a pen?', es: '¿Puedo pedir prestado un bolígrafo?' },
+      { en: 'I need to study', es: 'Necesito estudiar' },
+      { en: 'Where is the cafeteria?', es: '¿Dónde está la cafetería?' },
+      { en: 'What time is class?', es: '¿A qué hora es la clase?' },
+      { en: 'I missed class yesterday', es: 'Falté a clase ayer' },
+      { en: 'Can I have the notes?', es: '¿Puedo tener los apuntes?' },
+      { en: 'I have a presentation', es: 'Tengo una presentación' },
+      { en: 'Where do I print?', es: '¿Dónde puedo imprimir?' },
+      { en: 'I need help with...', es: 'Necesito ayuda con...' },
+      { en: 'Is there tutoring?', es: '¿Hay tutorías?' },
+      { en: 'Can I join your group?', es: '¿Puedo unirme a tu grupo?' },
+      { en: 'What chapter are we on?', es: '¿En qué capítulo estamos?' },
+      { en: 'I need to register', es: 'Necesito inscribirme' },
+      { en: 'Where is the office?', es: '¿Dónde está la oficina?' }
+    ]
+  },
+  {
+    name: 'Health & Emergency',
+    icon: '🚨',
+    phrases: [
+      { en: 'Help!', es: '¡Ayuda! ¡Socorro!' },
+      { en: 'I need a doctor', es: 'Necesito un médico' },
+      { en: 'I don\'t feel well', es: 'Me siento mal' },
+      { en: 'Where is the pharmacy?', es: '¿Dónde está la farmacia?' },
+      { en: 'I lost my passport', es: 'Perdí mi pasaporte' },
+      { en: 'My bag was stolen', es: 'Me robaron el bolso' },
+      { en: 'Call the police / ambulance', es: 'Llamen a la policía / ambulancia' },
+      { en: 'It hurts here', es: 'Me duele aquí' },
+      { en: 'Is there a hospital nearby?', es: '¿Hay un hospital cerca?' },
+      { en: 'It\'s an emergency', es: 'Es una emergencia' },
+      { en: 'I have a fever', es: 'Tengo fiebre' },
+      { en: 'I have a headache', es: 'Tengo dolor de cabeza' },
+      { en: 'I need medicine', es: 'Necesito medicina' },
+      { en: 'I\'m allergic to...', es: 'Soy alérgico/a a...' },
+      { en: 'Can you call an ambulance?', es: '¿Puede llamar una ambulancia?' },
+      { en: 'I need to see a dentist', es: 'Necesito ver un dentista' },
+      { en: 'Where is the emergency room?', es: '¿Dónde está urgencias?' },
+      { en: 'I have insurance', es: 'Tengo seguro' },
+      { en: 'I need a prescription', es: 'Necesito una receta' },
+      { en: 'Someone is hurt', es: 'Alguien está herido' }
+    ]
+  },
+  {
+    name: 'Banking & Admin',
+    icon: '🏦',
+    phrases: [
+      { en: 'I want to open an account', es: 'Quiero abrir una cuenta' },
+      { en: 'I need to make a transfer', es: 'Necesito hacer una transferencia' },
+      { en: 'Where is the ATM?', es: '¿Dónde está el cajero?' },
+      { en: 'My card doesn\'t work', es: 'Mi tarjeta no funciona' },
+      { en: 'I lost my card', es: 'Perdí mi tarjeta' },
+      { en: 'Can I change money here?', es: '¿Puedo cambiar dinero aquí?' },
+      { en: 'What is the exchange rate?', es: '¿Cuál es el tipo de cambio?' },
+      { en: 'I need a new PIN', es: 'Necesito un PIN nuevo' },
+      { en: 'What are the fees?', es: '¿Cuáles son las comisiones?' },
+      { en: 'I need my ID', es: 'Necesito mi identificación' },
+      { en: 'Can I have a statement?', es: '¿Puedo tener un extracto?' },
+      { en: 'I need to pay taxes', es: 'Necesito pagar impuestos' },
+      { en: 'Where do I register?', es: '¿Dónde me registro?' },
+      { en: 'I need to renew my visa', es: 'Necesito renovar mi visa' },
+      { en: 'What documents do I need?', es: '¿Qué documentos necesito?' },
+      { en: 'Can you help me fill this out?', es: '¿Puede ayudarme a llenar esto?' },
+      { en: 'Where do I submit this?', es: '¿Dónde entrego esto?' },
+      { en: 'How long does it take?', es: '¿Cuánto tiempo tarda?' },
+      { en: 'I need an appointment', es: 'Necesito una cita' },
+      { en: 'Is there a fee?', es: '¿Hay una tarifa?' }
+    ]
+  },
+  {
+    name: 'Phone & Internet',
+    icon: '📱',
+    phrases: [
+      { en: 'I need a SIM card', es: 'Necesito una tarjeta SIM' },
+      { en: 'Do you have WiFi?', es: '¿Tienen WiFi?' },
+      { en: 'What\'s the password?', es: '¿Cuál es la contraseña?' },
+      { en: 'I have no signal', es: 'No tengo señal' },
+      { en: 'My phone doesn\'t work', es: 'Mi teléfono no funciona' },
+      { en: 'Can I make a call?', es: '¿Puedo hacer una llamada?' },
+      { en: 'How much is data?', es: '¿Cuánto cuesta la data?' },
+      { en: 'I need to charge my phone', es: 'Necesito cargar mi teléfono' },
+      { en: 'Where can I buy credit?', es: '¿Dónde puedo comprar crédito?' },
+      { en: 'The internet is slow', es: 'El internet está lento' },
+      { en: 'Can you send it to me?', es: '¿Puede enviármelo?' },
+      { en: 'What\'s your number?', es: '¿Cuál es tu número?' },
+      { en: 'Can I use WhatsApp?', es: '¿Puedo usar WhatsApp?' },
+      { en: 'I didn\'t receive it', es: 'No lo recibí' },
+      { en: 'Can you repeat that?', es: '¿Puede repetir?' },
+      { en: 'I\'ll text you', es: 'Te enviaré un mensaje' },
+      { en: 'My battery is dead', es: 'Mi batería está muerta' },
+      { en: 'Where can I fix my phone?', es: '¿Dónde puedo reparar mi teléfono?' },
+      { en: 'I need a charger', es: 'Necesito un cargador' },
+      { en: 'Can I connect to WiFi?', es: '¿Puedo conectarme al WiFi?' }
+    ]
+  },
+  {
+    name: 'Social Life & Dating',
+    icon: '🎉',
+    phrases: [
+      { en: 'Want to grab a coffee?', es: '¿Quieres tomar un café?' },
+      { en: 'What are you doing tonight?', es: '¿Qué haces esta noche?' },
+      { en: 'Let\'s go out!', es: '¡Salgamos!' },
+      { en: 'Where is a good bar?', es: '¿Dónde hay un buen bar?' },
+      { en: 'Can I buy you a drink?', es: '¿Puedo invitarte una copa?' },
+      { en: 'You\'re very nice', es: 'Eres muy simpático/a' },
+      { en: 'Can I have your number?', es: '¿Puedo tener tu número?' },
+      { en: 'Do you want to dance?', es: '¿Quieres bailar?' },
+      { en: 'I had a great time', es: 'Lo pasé muy bien' },
+      { en: 'See you tomorrow!', es: '¡Nos vemos mañana!' },
+      { en: 'Where are you going?', es: '¿A dónde vas?' },
+      { en: 'Can I join you?', es: '¿Puedo acompañarte?' },
+      { en: 'Do you live here?', es: '¿Vives aquí?' },
+      { en: 'How long have you been here?', es: '¿Cuánto tiempo llevas aquí?' },
+      { en: 'I just moved here', es: 'Acabo de mudarme aquí' },
+      { en: 'Do you know any good places?', es: '¿Conoces buenos lugares?' },
+      { en: 'I\'m new here', es: 'Soy nuevo/a aquí' },
+      { en: 'Want to hang out?', es: '¿Quieres salir?' },
+      { en: 'That sounds fun!', es: '¡Suena divertido!' },
+      { en: 'Maybe another time', es: 'Quizás otra vez' }
+    ]
+  },
+  {
+    name: 'Numbers, Time & Weather',
+    icon: '🔢',
+    phrases: [
+      { en: 'What time is it?', es: '¿Qué hora es?' },
+      { en: 'One, two, three...', es: 'Uno, dos, tres...' },
+      { en: 'Ten, twenty, thirty...', es: 'Diez, veinte, treinta...' },
+      { en: 'One hundred / one thousand', es: 'Cien / mil' },
+      { en: 'What day is today?', es: '¿Qué día es hoy?' },
+      { en: 'Monday, Tuesday, Wednesday...', es: 'Lunes, martes, miércoles...' },
+      { en: 'January, February, March...', es: 'Enero, febrero, marzo...' },
+      { en: 'Yesterday / Today / Tomorrow', es: 'Ayer / Hoy / Mañana' },
+      { en: 'This week / Next week', es: 'Esta semana / La próxima semana' },
+      { en: 'What\'s the weather like?', es: '¿Qué tiempo hace?' },
+      { en: 'It\'s sunny', es: 'Hace sol' },
+      { en: 'It\'s raining', es: 'Está lloviendo' },
+      { en: 'It\'s cold / hot', es: 'Hace frío / calor' },
+      { en: 'Spring / Summer / Fall / Winter', es: 'Primavera / Verano / Otoño / Invierno' },
+      { en: 'Morning / Afternoon / Night', es: 'Mañana / Tarde / Noche' },
+      { en: 'At what time?', es: '¿A qué hora?' },
+      { en: 'Half past / Quarter past', es: 'Y media / Y cuarto' },
+      { en: 'In the morning / evening', es: 'Por la mañana / noche' },
+      { en: 'How many?', es: '¿Cuántos?' },
+      { en: 'First, second, third...', es: 'Primero, segundo, tercero...' }
+    ]
+  }
+];
+
+var QUICK_ES = [
+  '¡Hola! ¿Qué tal?',
+  '¿Dónde está el baño?',
+  '¿Cuánto cuesta esto?'
+];
+
+/* ============================================================
+   SPEECH (same implementation)
+   ============================================================ */
+var voices = [];
+var keepAlive = null;
+
+function loadVoices() {
+  var v = window.speechSynthesis.getVoices();
+  if (v && v.length) voices = v;
+}
+if ('speechSynthesis' in window) {
+  loadVoices();
+  window.speechSynthesis.onvoiceschanged = loadVoices;
+}
+
+function getVoice(lang) {
+  loadVoices();
+  for (var i = 0; i < voices.length; i++) {
+    if (voices[i].lang.toLowerCase().indexOf(lang.toLowerCase()) === 0) return voices[i];
+  }
+  return null;
+}
+
+function speak(text, onDone) {
+  if (!window.speechSynthesis) { if (onDone) onDone(); return; }
+  window.speechSynthesis.cancel();
+  if (keepAlive) { clearInterval(keepAlive); keepAlive = null; }
+  setTimeout(function() {
+    var u = new SpeechSynthesisUtterance(text);
+    u.lang = 'es-ES'; u.rate = 0.82; u.pitch = 1; u.volume = 1;
+    var v = getVoice('es'); if (v) u.voice = v;
+    u.onend = function() {
+      if (keepAlive) { clearInterval(keepAlive); keepAlive = null; }
+      if (onDone) onDone();
+    };
+    u.onerror = function() {
+      if (keepAlive) { clearInterval(keepAlive); keepAlive = null; }
+      if (onDone) onDone();
+    };
+    window.speechSynthesis.speak(u);
+    keepAlive = setInterval(function() {
+      if (!window.speechSynthesis.speaking) { clearInterval(keepAlive); keepAlive = null; return; }
+      if (window.speechSynthesis.paused) window.speechSynthesis.resume();
+    }, 200);
+  }, 80);
+}
+
+/* ============================================================
+   UI
+   ============================================================ */
+function show(id) {
+  document.getElementById('home').classList.remove('visible');
+  document.getElementById('cat').classList.remove('visible');
+  document.getElementById(id).classList.add('visible');
+  window.scrollTo(0, 0);
+}
+
+/* Quick test */
+for (var qi = 0; qi < 3; qi++) {
+  (function(idx) {
+    var btn = document.getElementById('q' + idx);
+    var hint = document.getElementById('qh' + idx);
+    btn.addEventListener('click', function() {
+      for (var j = 0; j < 3; j++) {
+        document.getElementById('q' + j).classList.remove('playing');
+        document.getElementById('qh' + j).textContent = '▶ Tap to hear Spanish';
+      }
+      btn.classList.add('playing');
+      hint.textContent = '🔊 Playing...';
+      speak(QUICK_ES[idx], function() {
+        btn.classList.remove('playing');
+        hint.textContent = '▶ Tap to hear Spanish';
+      });
+    });
+  })(qi);
+}
+
+/* Categories */
+var catBtns = document.querySelectorAll('.cat');
+var currentPlaying = null;
+
+function openCat(idx) {
+  var cat = DATA[idx];
+  document.getElementById('catName').textContent = cat.icon + '  ' + cat.name;
+  document.getElementById('catCount').textContent = cat.phrases.length + ' phrases';
+  document.getElementById('search').value = '';
+
+  var list = document.getElementById('phraseList');
+  list.innerHTML = '';
+  currentPlaying = null;
+  window.speechSynthesis.cancel();
+
+  for (var pi = 0; pi < cat.phrases.length; pi++) {
+    (function(phrase, num) {
+      var btn = document.createElement('button');
+      btn.className = 'phr';
+      btn.innerHTML =
+        '<div class="num">' + (num < 9 ? '0' : '') + (num + 1) + '</div>' +
+        '<div class="txt">' +
+          '<div class="en">' + phrase.en + '</div>' +
+          '<div class="es">' + phrase.es + '</div>' +
+          '<div class="hint">▶ Tap to hear Spanish</div>' +
+        '</div>' +
+        '<div class="arr">→</div>';
+
+      btn.addEventListener('click', function() {
+        if (currentPlaying && currentPlaying !== btn) {
+          currentPlaying.classList.remove('playing');
+          var ph = currentPlaying.querySelector('.hint');
+          if (ph) ph.textContent = '▶ Tap to hear Spanish';
+        }
+        currentPlaying = btn;
+        btn.classList.add('playing');
+        var hint = btn.querySelector('.hint');
+        hint.textContent = '🔊 Playing...';
+        speak(phrase.es, function() {
+          btn.classList.remove('playing');
+          hint.textContent = '▶ Tap to hear Spanish';
+          if (currentPlaying === btn) currentPlaying = null;
+        });
+      });
+
+      list.appendChild(btn);
+    })(cat.phrases[pi], pi);
+  }
+
+  show('cat');
+}
+
+for (var ci = 0; ci < catBtns.length; ci++) {
+  (function(btn) {
+    btn.addEventListener('click', function() {
+      var idx = parseInt(btn.getAttribute('data-cat'), 10);
+      openCat(idx);
+    });
+  })(catBtns[ci]);
+}
+
+/* Search */
+document.getElementById('search').addEventListener('input', function(e) {
+  var q = e.target.value.toLowerCase();
+  var list = document.getElementById('phraseList');
+  var btns = list.querySelectorAll('.phr');
+  for (var i = 0; i < btns.length; i++) {
+    var en = btns[i].querySelector('.en').textContent.toLowerCase();
+    var es = btns[i].querySelector('.es').textContent.toLowerCase();
+    if (en.indexOf(q) >= 0 || es.indexOf(q) >= 0) {
+      btns[i].style.display = 'flex';
+    } else {
+      btns[i].style.display = 'none';
+    }
+  }
+});
+
+/* Back */
+document.getElementById('back').addEventListener('click', function() {
+  window.speechSynthesis.cancel();
+  currentPlaying = null;
+  show('home');
+});
+
+/* Banner */
+document.getElementById('closeBanner').addEventListener('click', function() {
+  document.getElementById('banner').style.display = 'none';
+});
+
+if (window.navigator.standalone === true) {
+  document.getElementById('banner').style.display = 'none';
+}
+
+/* iOS fix */
+document.addEventListener('visibilitychange', function() {
+  if (!document.hidden && window.speechSynthesis && window.speechSynthesis.paused) {
+    window.speechSynthesis.resume();
+  }
+});
+</script>
+</body>
+</html>
